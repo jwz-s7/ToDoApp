@@ -1,14 +1,8 @@
-const express = require('express');
+const { createApp } = require('./routes');
 
-const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
+const app = createApp();
 
-app.get('/', (req, res) => {
-  res.send('ToDo API funcionando.');
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
-
-app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
-});
-
-module.exports = app;

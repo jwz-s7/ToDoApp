@@ -1,0 +1,10 @@
+{
+  "name": "todoapp",
+  "version": "1.0.0",
+  "description": "ToDo DevOps API em memória",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  }
+}

@@ -1,7 +1,21 @@
-const test = require('node:test');
+const { beforeEach, test } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const http = require('node:http');
 const { createApp } = require('../src/routes');
+
+const dataFilePath = path.resolve(__dirname, '..', 'data', 'tasks.json');
+
+function resetStore() {
+  fs.mkdirSync(path.dirname(dataFilePath), { recursive: true });
+  fs.writeFileSync(dataFilePath, JSON.stringify([], null, 2));
+}
+
+beforeEach(() => {
+  resetStore();
+});
+
 
 function request(server, method, path, body) {
   return new Promise((resolve, reject) => {
@@ -68,6 +82,32 @@ test('cria uma tarefa e a lista', async () => {
     assert.equal(tasks[0].id, createdTask.id);
   } finally {
     server.close();
+  }
+});
+
+test('persiste tarefas em arquivo entre instâncias da API', async () => {
+  const firstServer = await startServer();
+  try {
+    const created = await request(firstServer, 'POST', '/tasks', { titulo: 'Persistir tarefa' });
+    const taskId = JSON.parse(created.body).id;
+
+    firstServer.close();
+
+    const secondServer = await startServer();
+    try {
+      const listResponse = await request(secondServer, 'GET', '/tasks');
+      const tasks = JSON.parse(listResponse.body);
+
+      assert.equal(tasks.length, 1);
+      assert.equal(tasks[0].id, taskId);
+      assert.equal(tasks[0].titulo, 'Persistir tarefa');
+    } finally {
+      secondServer.close();
+    }
+  } finally {
+    if (firstServer.listening) {
+      firstServer.close();
+    }
   }
 });
 

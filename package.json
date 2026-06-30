@@ -1,6 +1,22 @@
 {
   "name": "todoapp",
   "version": "1.0.0",
+  "description": "ToDo DevOps API em memória",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "jest --runInBand tests"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
 
   "description": "ToDo DevOps API em memória",
 

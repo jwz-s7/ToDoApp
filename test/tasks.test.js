@@ -16,6 +16,7 @@ beforeEach(() => {
   resetStore();
 });
 
+
 function request(server, method, path, body) {
   return new Promise((resolve, reject) => {
     const address = server.address();
